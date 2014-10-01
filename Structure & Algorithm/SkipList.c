@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <malloc.h>
-
 #define MaxSkipListLevel  16
 
 static int const FALSE = 0;
@@ -96,7 +95,7 @@ boolean insert(list ls, KeyType k, ValueType v)
 {
 	int n = ls->current_max_level;
 	node p, q;
-	node update[MaxSkipListLevel];
+	node * update = (node*)malloc(sizeof(node)* MaxSkipListLevel);
 	p = ls->head;
 
 	do{
@@ -110,6 +109,7 @@ boolean insert(list ls, KeyType k, ValueType v)
 	} while (--n >= 0);
 
 	if (q && q->key == k){
+		free(update);
 		return FALSE;
 	}
 
@@ -127,6 +127,7 @@ boolean insert(list ls, KeyType k, ValueType v)
 		p->forward[n] = q;
 	} while (--n >= 0);
 
+	free(update);
 	return TRUE;
 }
 
@@ -135,16 +136,16 @@ boolean delete(list ls, KeyType k)
 	int n = ls->current_max_level;
 	int m = n;
 	node p, q;
-	node update[MaxSkipListLevel];
+	node * update = (node*)malloc(sizeof(node) * MaxSkipListLevel);
 
 	p = ls->head;
 	do{
 		q = p->forward[n];
 		while (q != &Nil && q->key < k){
 			p = q;
-			update[n] = p;
 			q = p->forward[n];
 		}
+		update[n] = p;
 		// q == Nil || q->key >= k
 		// p -> key < k
 	} while (--n >= 0);
@@ -153,19 +154,22 @@ boolean delete(list ls, KeyType k)
 	// find the node to be deleted
 	if (q  && q->key == k){
 		
-		for (n = 0; n < m && (p = update[n])->forward[n] == q; ++n){
+		for (n = 0; n <= m && (p = update[n])->forward[n] == q; ++n){
 			p->forward[n] = q->forward[n];
-			free(q);
 		}
+		free(q);
 
 		while (ls->head->forward[m] == &Nil  && m > 0){
 			--m;
 		}
 
 		ls->current_max_level = m;
+
+		free(update);
 		return TRUE;
 	}
 
+	free(update);
 	return FALSE;
 }
 
@@ -173,7 +177,7 @@ boolean find(list ls, KeyType k)
 {
 	int n = ls->current_max_level;
 	node p, q;
-	node update[MaxSkipListLevel];
+	node * update = (node*)malloc(sizeof(node)* MaxSkipListLevel);
 
 	p = ls->head;
 	do{
@@ -190,27 +194,33 @@ boolean find(list ls, KeyType k)
 	// n == 0
 	// find the node to be deleted
 	if (q  && q->key == k){
+		free(update);
 		return TRUE;
 	}
 
+	free(update);
 	return FALSE;
 }
 
-
+#define sampleTestSize 50
 
 int main(int argc, char * argv[])
 {
-	printf("Hello World");
-
-	list tmp = createSkipList();
-	insert(tmp, 4, 10);
-	insert(tmp, 5, 10);
-	insert(tmp, 1000, 200000);
-	for (int i = 0; i < 10; i++){
-		printf("%d  ", find(tmp, i));
+	list ls = createSkipList();
+	int i,j;
+	KeyType keys[sampleTestSize];
+	for (i = 0; i < sampleTestSize; ++i){
+		keys[i] = rand();
+		insert(ls, keys[i], keys[i]);
 	}
-	printf("\n%d\n", find(tmp, 1000));
-	//insert(tmp, 100, 10);
+
+	for (i = 0; i < 4; ++i){
+		for (j = 0; j < sampleTestSize; ++j){
+			if (!find(ls, keys[j])){
+				printf("error in find %d\n", keys[j]);
+			}
+		}
+	}
 	return 0;
 }
 
