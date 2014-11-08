@@ -7,22 +7,12 @@ list to obtain a name score.
 
 For example, when the list is sorted into alphabetical order, COLIN, 
 which is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. So, COLIN would 
-obtain a score of 938 Ă 53 = 49714.
+obtain a score of 938 × 53 = 49714.
 
 What is the total of all the name scores in the file?
 
 """
-lookup_table = {'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,
-				'H':8,'I':9,'J':10,'K':11,'L':12,'M':13,'N':14,
-				'O':15,'P':16,'Q':17,'R':18,'S':19,'T':20,'U':21,
-				'V':22,'W':23,'X':24,'Y':25,'Z':26}
-
-def get_string_scores(string):
-	scores = 0
-	for i,ch in enumerate(string):
-		scores += lookup_table[ch]
-	return scores
-
+lookup_table = {'A':1,'B':2}
 def get_total_scores(filename):
 	name_file = open(filename,"r+")
 	name_file.seek(0,2)
@@ -31,13 +21,11 @@ def get_total_scores(filename):
 	file_content = name_file.read(file_size)
 	name_list = file_content.replace("\"","").split(',')
 	name_list.sort()
-	scores = 0
-	rank = 1
-	for name in name_list:
-		scores += (get_string_scores(name) * rank)
-		rank += 1
-	return scores
+	
+
 
 if __name__ == "__main__":
-	print get_total_scores("name.txt")
-# Answer:871198282
+	foo = 'abc'
+	for i, ch in enumerate(foo):
+    	print ch, '(%d)' % i
+	#get_total_scores("name.txt")
