@@ -132,4 +132,4 @@ Reference示例:![替代文本][pic]
 HTML示例:<img src="/img/racket" alt="替代文本" title="标题文本" width="200" />
 ```
 ###效果:
-![](//img/racket.jpg "可选的title")
+![](/img/racket.jpg "可选的title")
