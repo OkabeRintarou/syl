@@ -1,3 +1,12 @@
+#索引
+* [标题](#标题)
+* [换行](#换行)
+* [引用](#引用)
+* [列表](#列表)
+* [代码区域](#代码区域)
+* [图片](#图片)
+
+#标题
 rkdown提供了两种方式（Setext和Atx）来显示标题
 
 ### 语法
@@ -118,7 +127,7 @@ Markdown支持两种风格的链接:Inline和Reference
 [ref]:https://github.com/OkabeRintarou/syl/tree/master/git-man/markdown
 ```
 ###效果:
-这是一个Inline[示例](https://github.com/OkabeRintarou/syl/tree/master/git-man/markdown)
+这是一个Inline[示例](https://github.com/OkabeRintarou/syl/tree/master/git-man/markdown)              
 这是一个Reference[示例][ref]
 [ref]:https://github.com/OkabeRintarou/syl/tree/master/git-man/markdown
 #图片
