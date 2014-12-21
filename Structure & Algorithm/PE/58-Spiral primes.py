@@ -3,7 +3,6 @@
 from __future__ import division
 
 def sieveprimes(target):
-	"""target:ÒÔÖÊÊý¿ªÍ·Á¬ÐøµÄ×ÔÈ»ÊýÇø¼ä,·µ»ØÇø¼äÄÚËùÓÐÖÊÊýµÄÁÐ±í"""
 	i = 0
 	last = target[-1]
 	while target[i] * 2  <= last:
