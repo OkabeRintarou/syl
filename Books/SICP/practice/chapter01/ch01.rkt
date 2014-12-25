@@ -84,7 +84,7 @@
       (p (sine (/ angle 3.0))))
   )
 
-;练习16
+;练习1-16
 (define (practice1-16 b n) ;迭代
   (define (even? n)
     (= (remainder n 2) 0))
@@ -103,7 +103,7 @@
         ((even? n) (square (fast-expt b (/ n 2))))
         (else (* b (fast-expt  b (- n 1))))))
 
-;练习17
+;练习1-17
 (define (practice1-17 a b) ;递归
   (define (even? n)
     (= (remainder n 2) 0))
@@ -125,3 +125,44 @@
           [else (iter (+ m (double a)) (double a) (halve b))]))
   (define m (if (even? b) 0 a))
   (iter m a b))
+
+;练习1-19
+(define (practice1-19 n)
+  
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (define (fib-iter a b p q count)
+    (cond ((= count 0) b)
+          ((even? count)
+           (fib-iter a
+                     b
+                     (+ (* p p) (* q q))
+                     (+ (* 2 p q) (* q q))      
+                     (/ count 2)))
+          (else (fib-iter (+ (* b q) (* a q) (* a p))
+                          (+ (* b p) (* a q))
+                          p
+                          q
+                          (- count 1)))))
+  (fib-iter 1 0 0 1 n));
+
+;欧几里得算法
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+
+;√n 增长阶素数判断
+(define (smallest-divisor n)
+  (define (square x) (* x x))
+  (define (divided? a b)
+    (= (remainder b a) 0))
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n ) n)
+          ((divided? test-divisor n) test-divisor)
+          (else (find-divisor n (+ test-divisor 1)))))
+  (find-divisor n 2))
+(define (prime? n)
+  (= (smallest-divisor n) n))
+
+
