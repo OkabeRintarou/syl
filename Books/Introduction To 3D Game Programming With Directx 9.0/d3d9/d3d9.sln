@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "d3d9\d3d9.vcxproj", "{60505939-6649-4E08-AA70-75427A80A00C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3DXCreate", "D3DXCreate\D3DXCreate.vcxproj", "{F6623240-F95A-4226-9759-A3121CCB8640}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{60505939-6649-4E08-AA70-75427A80A00C}.Debug|Win32.Build.0 = Debug|Win32
 		{60505939-6649-4E08-AA70-75427A80A00C}.Release|Win32.ActiveCfg = Release|Win32
 		{60505939-6649-4E08-AA70-75427A80A00C}.Release|Win32.Build.0 = Release|Win32
+		{F6623240-F95A-4226-9759-A3121CCB8640}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F6623240-F95A-4226-9759-A3121CCB8640}.Debug|Win32.Build.0 = Debug|Win32
+		{F6623240-F95A-4226-9759-A3121CCB8640}.Release|Win32.ActiveCfg = Release|Win32
+		{F6623240-F95A-4226-9759-A3121CCB8640}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
