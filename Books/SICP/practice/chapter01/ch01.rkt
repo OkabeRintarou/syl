@@ -165,4 +165,108 @@
 (define (prime? n)
   (= (smallest-divisor n) n))
 
+;练习1-29
+(define (simpson-rule f a b n)
+  (define beg a)
+  (define h (/ (- b a) n))
+  (define (sum term a next n)
+    (if (> a n)
+      0
+      (+ (term a) (sum term (next a) next n))))
+  (define (inc x) (+ x 1))
+  (define (simpson-term a)
+    (* (f (+ beg (* a h)))
+       (cond ((or (= a 0) (= a n)) 1)
+             ((= (remainder a 2) 1) 4)
+             (else 2))))
+  (* (/ h 3)
+     (sum simpson-term a inc n)))
+(define (test-cube x) (* x x x)) 
+;(simpson-rule test-cube 0 1 100) --> 1/4
+;(simpson-rule test-cube 0 1 1000) --> 1/4
 
+(define (test-function x) (+ (* (/ 1.0 3) x x x) (* 2 x x) 9))  
+;(simpson-rule test-function 0 1 100) --> 9.749999999999998
+;(simpson-rule test-function 0 1 1000) --> 9.75
+
+;练习1-30
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ (term a) result))))
+  (iter a 0))
+
+;练习1-31
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* (term a) result))))
+  (iter a 1))
+(define (compute-pi)
+ #| ##########################################
+π   2 * 4 * 4 * 6 * 6 * 8 ...
+- = -   -   -   -   -   -
+4   3 * 3 * 5 * 5 * 7 * 7 ...
+
+ ############################################ |#
+  (define beg 1)
+  (define end 100000)
+  (define (numerator-term a)
+    (if (= (remainder a 2) 0)
+        (+ a 2)
+        (+ a 1)))
+  (define (numerator-next a)
+    (+ a 1))
+  (define (denominator-term a) 
+    (if (= (remainder a 2) 1)
+       (+ a 2)
+       (+ a 1)))
+  (define (denominator-next a)
+    (+ a 1))
+  (* 4 (/ (product numerator-term beg numerator-next end)
+          (product denominator-term beg denominator-next end))))
+
+; 练习1-32
+(define (accumulate-recursion combiner null-value term a next b)  ;递归
+  (if (> a b)
+      null-value
+      (combiner (term a) (accumulate-recursion combiner null-value term (next a) next b))))
+(define (accumulate-iteration combiner null-value term a next b)  ;迭代
+  (define (accumulate-iteration-iter a result)
+    (if (> a  b)
+        result
+        (accumulate-iteration-iter (next a) (combiner (term a) result))))
+  (accumulate-iteration-iter a null-value))
+        
+(define (test-sum-recursion term a next b)
+  (accumulate-recursion + 0 term a next b))
+(define (test-sum-iteration term a next b)
+  (accumulate-iteration + 0 term a next b))
+(define (test-product-recursion term a next b)
+  (accumulate-recursion * 1 term a next b))
+(define (test-product-iteration term a next b)
+  (accumulate-iteration * 1 term a next b))
+
+;练习1-33
+(define (filtered-accumulate filter combiner null-value term a next b)
+  (define (filtered-accumulate-iter a result)
+    (if (> a b)
+        result
+        (if (filter a)
+            (filtered-accumulate-iter (next a) (combiner result (term a)))
+            (filtered-accumulate-iter (next a) result))))
+  (filtered-accumulate-iter a null-value))
+(define (prime-sum a b)
+  (define (term a) a)
+  (define (next a) (+ a 1))
+  (filtered-accumulate prime? + 0 term a next b))
+(define (coprime-product n)
+  (define (term a) a)
+  (define (next a) (+ a  1))
+  (define (coprime? i)
+    (= (gcd i n) 1))
+  (filtered-accumulate coprime? * 1 term 2 next n))
+
+  
