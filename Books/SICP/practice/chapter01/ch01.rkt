@@ -269,4 +269,48 @@
     (= (gcd i n) 1))
   (filtered-accumulate coprime? * 1 term 2 next n))
 
-  
+;练习1-35
+(define (fixed-point f first-guess)
+  (define tolerance 0.00001)
+  (define (abs x) (if (< x 0) (- x) x))
+  (define (close-enough? x y)
+    (< (abs (- x y)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+(define (practice1-35)
+  (fixed-point (lambda (x) (+ 1 (/ 1.0 x))) 1.0))
+
+;练习1-36
+(define (fixed-point-ex f first-guess)
+  (define tolerance 0.00001)
+  (define (abs x) (if (< x 0) (- x) x))
+  (define (close-enough? x y)
+    (< (abs (- x y)) tolerance))
+  (define (try guess)
+    (display guess)
+    (newline)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+(define (practice1-36-no) ;无阻尼
+  (fixed-point-ex (lambda (x) (/ (log 1000) (log x))) 1.1))
+(define (practice1-36-yes);有阻尼
+  (fixed-point-ex (lambda (x) (* (/ 1 2) (+ (/ (log 1000) (log x)) x))) 1.1))
+
+;练习1-37
+(define (cont-frac n d k)
+  (define (cont-frac-impl n d i k)
+    (if (= i k)
+        (/ (n k) (d k))
+        (/ (n i) (+ (d i) (cont-frac-impl n d (+ i 1) k)))))
+  (cont-frac-impl n d 1 k))
+(define (test i)
+  (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) i))
+
+
