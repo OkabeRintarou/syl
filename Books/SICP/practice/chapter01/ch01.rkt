@@ -304,13 +304,34 @@
   (fixed-point-ex (lambda (x) (* (/ 1 2) (+ (/ (log 1000) (log x)) x))) 1.1))
 
 ;练习1-37
-(define (cont-frac n d k)
-  (define (cont-frac-impl n d i k)
+(define (cont-frac-recursion n d k) ;递归
+  (define (cont-frac-impl i )
     (if (= i k)
         (/ (n k) (d k))
-        (/ (n i) (+ (d i) (cont-frac-impl n d (+ i 1) k)))))
-  (cont-frac-impl n d 1 k))
-(define (test i)
-  (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) i))
+        (/ (n i) (+ (d i) (cont-frac-impl (+ i 1) )))))
+  (cont-frac-impl 1))
+(define (cont-frac-iteration n d k) ;迭代
+  (define (cont-frac-iter i result)
+    (if (= i 0)
+        result
+        (cont-frac-iter (- i 1) (/ (n i) (+ result (d i))))))
+  (cont-frac-iter k 0))
 
+;练习1-38
+(define (practice1-38-impl k)
+  (define (D i)
+    (cond ((= i 1) 1)
+          ((= (remainder i 3) 2) (* 2 (/ (+ i 1)  3)))
+          (else 1)))
+  (cont-frac-iteration (lambda (i) 1.0) D k))
+(define (practice1-38)
+  (+ 2 practice1-38-impl 100)) ;  --> e≈2..7182818284590453
 
+;练习1-39
+(define (tan-cf x k)
+  (define (d n) (- (* 2 n) 1))
+  (define (n i) 
+    (if (= i 1) 
+        x
+        (- (* x x))))
+ (cont-frac-iteration n d k))
