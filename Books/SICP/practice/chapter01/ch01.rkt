@@ -335,3 +335,50 @@
         x
         (- (* x x))))
  (cont-frac-iteration n d k))
+
+;练习1-40
+(define dx 0.00001)
+  (define (deriv g)
+    (lambda (x)
+      (/ (- (g (+ x dx)) (g x)) dx)))
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (newtons-method f guess) ;牛顿法
+  (fixed-point (newton-transform f) guess))
+
+(define (cubic a b c)
+  (define (cube x) (* x x x))
+  (define (square x) (* x x))
+  (lambda (x)
+    (+ (cube x) (* a (square x)) (* b x) c)))
+(define (practice1-40 a b c)
+  (newtons-method (cubic a b c) 1))
+
+;练习1-41
+(define (double f)
+  (lambda (x)
+    (f (f x))))
+(define (inc x)
+  (+ x 1))
+(define (practice1-41)
+  (((double (double double)) inc) 5))
+
+;练习1-42
+(define (practice1-42)
+  (define (compose f g)
+    (lambda (x)
+      (f (g x))))
+  (define (square x)
+    (* x  x))
+  ((compose square inc) 6))
+
+;练习1-43
+(define (repeated f n)
+  (lambda (x)
+    (if (= n 1)
+        (f x)
+        ((compose f (repeated f (- n 1))) x))))
+        
+((repeated (lambda (x) (* x x)) 2) 5)
