@@ -222,3 +222,36 @@
                             (cons first rst))
                           rest)))))
 
+;练习2-33
+(define (practice2-33)
+  (define (accumulate op initial seq)
+    (if (null? seq)
+        initial
+        (op (car seq)
+            (accumulate op initial (cdr seq)))))
+  (define (map p seq)
+    (accumulate (lambda (x y) (cons (p x) y)) empty seq))
+  (define (append seq1 seq2)
+    (accumulate cons seq2 seq1))
+  (define (length seq)
+    (accumulate (lambda (x y) (+ 1 y))
+                  0 seq))
+  (begin 
+    (display (map (lambda (x) (* x x)) (list 1 2 3 4 5)))
+    (newline)
+    (display (append (list 1 2 3) (list 4 5 6 7)))
+    (newline)
+    (display (length (list 1 2 3 0 0 0)))
+    (newline)))
+
+;练习2-34
+(define (horner-eval x coefficient-sequence)
+  (define (accumulate op initial seq)
+    (if (null? seq)
+        initial
+        (op (car seq)
+            (accumulate op initial (cdr seq)))))
+  (accumulate (lambda (this-coeff higher-terms)
+                <??>)
+              0
+              coefficient-sequence))
