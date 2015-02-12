@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameScriptingMastery", "GameScriptingMastery\GameScriptingMastery.vcxproj", "{23587D72-F3BE-4347-8860-10ACE5B79C89}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleCBL", "ConsoleCBL\ConsoleCBL.vcxproj", "{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23587D72-F3BE-4347-8860-10ACE5B79C89}.Debug|Win32.ActiveCfg = Debug|Win32
+		{23587D72-F3BE-4347-8860-10ACE5B79C89}.Debug|Win32.Build.0 = Debug|Win32
+		{23587D72-F3BE-4347-8860-10ACE5B79C89}.Release|Win32.ActiveCfg = Release|Win32
+		{23587D72-F3BE-4347-8860-10ACE5B79C89}.Release|Win32.Build.0 = Release|Win32
+		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Debug|Win32.ActiveCfg = Debug|Win32
+		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Debug|Win32.Build.0 = Debug|Win32
+		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Release|Win32.ActiveCfg = Release|Win32
+		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
