@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameScriptingMastery", "Gam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleCBL", "ConsoleCBL\ConsoleCBL.vcxproj", "{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scripted Intro", "Scripted Intro\Scripted Intro.vcxproj", "{C1E73E62-4CF9-43E8-A31E-E51A09920C18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Debug|Win32.Build.0 = Debug|Win32
 		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Release|Win32.ActiveCfg = Release|Win32
 		{70BD156D-DDF0-49E1-8899-2BCC4A13CC24}.Release|Win32.Build.0 = Release|Win32
+		{C1E73E62-4CF9-43E8-A31E-E51A09920C18}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1E73E62-4CF9-43E8-A31E-E51A09920C18}.Debug|Win32.Build.0 = Debug|Win32
+		{C1E73E62-4CF9-43E8-A31E-E51A09920C18}.Release|Win32.ActiveCfg = Release|Win32
+		{C1E73E62-4CF9-43E8-A31E-E51A09920C18}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

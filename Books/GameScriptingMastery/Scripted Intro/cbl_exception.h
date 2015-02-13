@@ -22,5 +22,25 @@ namespace cbl{
 		unknow_command_exception(const char * msg)
 			:exception(msg){}
 	};
+
+	class parse_exception :public std::exception
+	{
+	public:
+		parse_exception(const std::string & msg)
+			:exception(msg.c_str()){}
+		parse_exception(const char * msg)
+			:exception(msg){}
+	};
+
+	class window_create_failed_exception :public std::exception
+	{
+	public:
+		window_create_failed_exception(const std::string & msg)
+			:exception(msg.c_str()){}
+		window_create_failed_exception(const char * msg)
+			:exception(msg){}
+	};
+
+
 }
 #endif
