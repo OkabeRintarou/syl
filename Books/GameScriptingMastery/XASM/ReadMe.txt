@@ -24,12 +24,12 @@
 ;	SetChar Index,Destination,Source
 ; 5.条件分支
 ;	Jmp Label
-;	JE	Op0,Op1,Label1
-;	JNE Op0,Op1,Label1
-;	JG  Op0,Op1,Label1
-;	JL	Op0,Op1,Label1
-;	JGE Op0,Op1,Label1
-;	JLE Op0,Op1,Label1
+;	JE	Op0,Op1,Label
+;	JNE Op0,Op1,Label
+;	JG  Op0,Op1,Label
+;	JL	Op0,Op1,Label
+;	JGE Op0,Op1,Label
+;	JLE Op0,Op1,Label
 ; 6.堆栈接口
 ;	Push Source
 ;	Pop	 Destination	
