@@ -13,11 +13,11 @@ namespace xasm
 		TOKEN_TYPE_QUOTE,			// " 
 		TOKEN_TYPE_IDENT,           // identifier
 		TOKEN_TYPE_COLON,			// :
-		TOKEN_TYPE_OPEN_BRACKET,    // {
-		TOKEN_TYPE_CLOSE_BRACKET,   // }
+		TOKEN_TYPE_OPEN_BRACKET,    // [
+		TOKEN_TYPE_CLOSE_BRACKET,   // ]
 		TOKEN_TYPE_COMMA,			// ,
-		TOKEN_TYPE_OPEN_BRACE,		// [
-		TOKEN_TYPE_CLOSE_BRACE,		// ]
+		TOKEN_TYPE_OPEN_BRACE,		// {
+		TOKEN_TYPE_CLOSE_BRACE,		// }
 		TOKEN_TYPE_NEWLINE,			// '\n'
 		TOKEN_TYPE_INSTR,			// instruction
 		TOKEN_TYPE_SETSTACKSIZE,	// SetStackSize indicator
@@ -29,31 +29,23 @@ namespace xasm
 		TOKEN_TYPE_END_OF_FILE      // end of file
 	};
 
-	class Op
-	{
-	private:
-		TokenType type_;
-
-	};
-
-	class Instruction
-	{
-	private:
-		int op_code_;
-		int op_count_;
-	};
-
 	class TokenLocation
 	{
 	public:
 		TokenLocation()
-			:line_(-1), columu_(-1){}
+			:line_(-1), column_(-1){}
 		TokenLocation(const std::string & file, int line, int column)
-			:file_(file), line_(line), columu_(column){}
+			:file_(file), line_(line), column_(column){}
+		const std::string & GetFileName()const{ return file_; }
+		std::string GetFileName(){ return file_; }
+		long GetLine()const{ return line_; }
+		long GetLine(){ return line_; }
+		long GetColumn()const{ return column_; }
+		long GetColumn(){ return column_; }
 	private:
 		std::string file_;
 		long line_;
-		long columu_;
+		long column_;
 	};
 
 	class Token
@@ -67,6 +59,8 @@ namespace xasm
 			:type_(type), loc_(loc), int_val_(val){}
 		Token(TokenType type,TokenLocation loc,float val)
 			:type_(type), loc_(loc), float_val_(val){}
+		const TokenLocation & GetTokenLocation()const{ return loc_; }
+		TokenLocation GetTokenLocation(){ return loc_; }
 		TokenType GetType()const{ return type_;}
 		std::string GetString()const{ return str_; }
 		int GetInteger()const{ return int_val_; }

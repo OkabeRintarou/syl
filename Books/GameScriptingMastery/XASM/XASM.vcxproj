@@ -79,17 +79,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="test_0.xasm" />
+    <None Include="test_1.xasm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="Structure.h" />
+    <ClInclude Include="SyntaxParser.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="XASM.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scanner.cpp" />
+    <ClCompile Include="SyntaxParser.cpp" />
     <ClCompile Include="XASM.cpp" />
   </ItemGroup>
   <ItemGroup>

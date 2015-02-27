@@ -1,5 +1,5 @@
 ; Script Example
-; Show how to use VVM Assemble Language
+; Show how to use XVM Assemble Language
 
 ; ---- Global variables ----
 	Var GlobalVar
@@ -27,6 +27,7 @@
 		; This function accepts no arguments
 		; But it has a local data
 		Var MySum
+
 		; We are going to test the Add function, so we will begin by pressure into the two parameters
 		Push 16
 		Push 32
@@ -45,7 +46,7 @@
 	}
 	
 	; A special function _Main(),will automatically perform this function
-	Function _Main
+	Func _Main
 	{
 		; Call 'MyFunction' test function
 		Call MyFunc

@@ -18,6 +18,9 @@
     <None Include="test_0.xasm">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="test_1.xasm">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h">
@@ -38,12 +41,21 @@
     <ClInclude Include="Structure.h">
       <Filter>Head Files</Filter>
     </ClInclude>
+    <ClInclude Include="SyntaxParser.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XASM.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="XASM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SyntaxParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
