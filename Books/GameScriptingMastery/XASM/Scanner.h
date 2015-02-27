@@ -1,6 +1,7 @@
 #ifndef XASM_SCANNER_H_
 #define XASM_SCANNER_H_
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -20,12 +21,23 @@ namespace xasm
 		float GetFloatValue()const{ return float_val_; }
 		Token GetNextToken();
 		Token GetToken()const{ return token_; }
+		TokenLocation GetTokenLocation(){ return token_.GetTokenLocation(); }
+		const std::string & GetCurrentLine()const{ return strings_.at(line_ - 1); }
+		const std::string GetLineString(int line)const{ return strings_.at(line - 1); }
+		const std::string & GetFileName()const{ return filename_; }
 	private:
 		inline void Advance();
 		inline char Peek();
 		void Preprocess();
 		void SkipWithoutNewline();
 		void HandleComment();
+		Token HandleNewline();
+		Token HandleColon();
+		Token HandleOpenBracket();
+		Token HandleCloseBracket();
+		Token HandleOpenBrace();
+		Token HandleCloseBrace();
+		Token HandleComma();
 		Token HandleStringLiteral();
 		Token HandleDigitLiteral();
 		Token HandleIdentifier();
@@ -37,11 +49,11 @@ namespace xasm
 	private:
 		static std::vector<std::string> instructions;
 	private:
+		std::vector<std::string> strings_;
 		std::fstream input_;
 		std::string buffer_;
 		std::string filename_;
 
-		TokenLocation loc_;
 		Token token_;
 		std::string iden_;
 		int int_val_;
@@ -49,6 +61,8 @@ namespace xasm
 
 		long line_;
 		long column_;
+		long prev_line_;
+		long prev_column_;
 		char cur_char_;
 	};
 }

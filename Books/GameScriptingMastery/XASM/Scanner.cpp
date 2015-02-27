@@ -19,6 +19,10 @@ namespace xasm
 
 	Scanner::Scanner()
 	{
+		line_ = 1;
+		column_ = 0;
+		prev_line_ = 1;
+		prev_column_ = 0;
 	}
 
 	Scanner::~Scanner()
@@ -36,6 +40,19 @@ namespace xasm
 		if (input_.fail()){
 			throw xasm::file_open_failed_exception{ std::string("open file ") + filename + " failed." };
 		}
+		std::string line;
+		while (!input_.eof()){
+			std::getline(input_, line);
+			strings_.push_back(line);
+		}
+		CloseFile();
+		input_.open(filename);
+		if (input_.fail()){
+			throw xasm::file_open_failed_exception{ std::string("open file ") + filename + " failed." };
+		}
+
+		/*std::getline(input_, line_buffer_);
+		line_buffer_.push_back('\n');*/
 		Advance();
 	}
 
@@ -50,14 +67,18 @@ namespace xasm
 	{
 		cur_char_ = input_.get();
 		if (cur_char_ == '\n'){
+			prev_line_ = line_;
+			prev_column_ = column_;
 			++line_;
 			column_ = 0;
 		}
 		else{
+			prev_column_ = column_;
 			column_++;
 		}
 	}
 
+	
 	char Scanner::Peek()
 	{
 		return input_.peek();
@@ -90,39 +111,33 @@ namespace xasm
 
 	Token Scanner::GetNextToken()
 	{
-		bool matched = false;
-
 		Preprocess();
+
+		TokenLocation loc(filename_, line_, column_);
+
 		if (input_.eof()){
-			return Token(TokenType::TOKEN_TYPE_END_OF_FILE);
+			return MakeToken(TokenType::TOKEN_TYPE_END_OF_FILE,loc,-1);
 		}
 		if (cur_char_ == '\n'){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_NEWLINE);
+			return HandleNewline();
 		}
 		if (cur_char_ == ':'){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_COLON);
-		}
-		if (cur_char_ == '{'){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_OPEN_BRACKET);
-		}
-		if (cur_char_ == '}'){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_CLOSE_BRACKET);
-		}
-		if (cur_char_ == ','){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_COMMA);
+			return HandleColon();
 		}
 		if (cur_char_ == '['){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_OPEN_BRACE);
+			return HandleOpenBracket();
 		}
 		if (cur_char_ == ']'){
-			Advance();
-			return Token(TokenType::TOKEN_TYPE_CLOSE_BRACE);
+			return HandleCloseBracket();
+		}
+		if (cur_char_ == ','){
+			return HandleComma();
+		}
+		if (cur_char_ == '{'){
+			return HandleOpenBrace();
+		}
+		if (cur_char_ == '}'){
+			return HandleCloseBrace();
 		}
 
 		if (cur_char_ == '"'){
@@ -138,6 +153,69 @@ namespace xasm
 		return Token(TokenType::TOKEN_TYPE_INVALID);
 	}
 
+	Token Scanner::HandleNewline()
+	{
+		TokenLocation loc(filename_, prev_line_, prev_column_);
+
+		Advance(); // eat '\n'
+		buffer_.push_back('\n');
+		return MakeToken(TokenType::TOKEN_TYPE_NEWLINE, loc, buffer_);
+	}
+
+	Token Scanner::HandleColon()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat ':'
+		buffer_.push_back(':');
+		return MakeToken(TokenType::TOKEN_TYPE_COLON, loc, buffer_);
+	}
+
+	Token Scanner::HandleOpenBracket()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat '['
+		buffer_.push_back('[');
+		return MakeToken(TokenType::TOKEN_TYPE_OPEN_BRACKET, loc, buffer_);
+	}
+
+	Token Scanner::HandleCloseBracket()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat ']'
+		buffer_.push_back(']');
+		return MakeToken(TokenType::TOKEN_TYPE_CLOSE_BRACKET, loc, buffer_);
+	}
+
+	Token Scanner::HandleOpenBrace()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat '{'
+		buffer_.push_back('{');
+		return MakeToken(TokenType::TOKEN_TYPE_OPEN_BRACE, loc, buffer_);
+	}
+
+	Token Scanner::HandleCloseBrace()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat '}'
+		buffer_.push_back('}');
+		return MakeToken(TokenType::TOKEN_TYPE_CLOSE_BRACE, loc, buffer_);
+	}
+
+	Token Scanner::HandleComma()
+	{
+		TokenLocation loc(filename_, line_, column_);
+
+		Advance(); // eat ','
+		buffer_.push_back(',');
+		return MakeToken(TokenType::TOKEN_TYPE_COMMA, loc, buffer_);
+	}
+
 	Token Scanner::HandleStringLiteral()
 	{
 		TokenLocation loc(filename_, line_, column_);
@@ -151,8 +229,11 @@ namespace xasm
 					Advance();
 				}
 			}
-			buffer_.push_back(cur_char_);
-			Advance();
+			else{
+				buffer_.push_back(cur_char_);
+				Advance();
+			}
+			
 		}
 		Advance(); // eat '"'
 
