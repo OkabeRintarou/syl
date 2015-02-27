@@ -1,7 +1,7 @@
-; XVMÖ¸Áî¼¯
-; 1.ÄÚ´æ
+ï»¿; XVMæŒ‡ä»¤é›†
+; 1.å†…å­˜
 ;	Mov Destination,Source
-; 2. ËãÊıÔËËã
+; 2. ç®—æ•°è¿ç®—
 ;	Add Destination,Source
 ;	Sub Destination,Source
 ;	Mul Destination,Source
@@ -11,18 +11,18 @@
 ;	Neg Destination
 ;	Inc Destination
 ;	Dec Destination
-; 3.Î»ÔËËã·û
+; 3.ä½è¿ç®—ç¬¦
 ;	And Destination,Source
 ;	Or  Destination,Source
 ;	Xor Destination,Source
 ;	Not Destination
 ;	ShL Destination,ShiftCount
 ;	ShR Destination,ShiftCount
-; 4.×Ö·û´®²Ù×÷
+; 4.å­—ç¬¦ä¸²æ“ä½œ
 ;	Concat String0,String1
 ;	GetChar Destination,Source,Index
 ;	SetChar Index,Destination,Source
-; 5.Ìõ¼ş·ÖÖ§
+; 5.æ¡ä»¶åˆ†æ”¯
 ;	Jmp Label
 ;	JE	Op0,Op1,Label
 ;	JNE Op0,Op1,Label
@@ -30,14 +30,14 @@
 ;	JL	Op0,Op1,Label
 ;	JGE Op0,Op1,Label
 ;	JLE Op0,Op1,Label
-; 6.¶ÑÕ»½Ó¿Ú
+; 6.å †æ ˆæ¥å£
 ;	Push Source
 ;	Pop	 Destination	
-; 7.º¯Êı½Ó¿Ú
+; 7.å‡½æ•°æ¥å£
 ;	Call FunctionName
 ;	Ret
 ;	CallHost FunctionName
-; 8.ÆäËû
+; 8.å…¶ä»–
 ;	Pause Duration
 ;	Exit  Code
 ;
