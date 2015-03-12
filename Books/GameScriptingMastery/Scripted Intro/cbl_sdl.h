@@ -7,41 +7,34 @@
 namespace cbl{
 	namespace sdl{
 		
+		using WindowFlag = SDL_WindowFlags;
+		using RendererFlag = SDL_RendererFlags;
 
-		enum class WindowFlag
-		{
-			WINDOW_FULLSCREEN,
-			WINDOW_FULLSCREEN_DESKTOP,
-			WINDOW_OPENGL,
-			WINDOW_SHOWN,
-			WINDOW_HIDDEN,
-			WINDOW_BORDERLESS,
-			WINDOW_RESIZABLE,
-			WINDOW_MINIMIZED,
-			WINDOW_MAXIMIZED,
-			WINDOW_INPUT_GRABBED,
-			WINDOW_INPUT_FOCUS,
-			WINDOW_MOUSE_FOCUS,
-			WINDOW_FOREIGN,
-			WINDOW_ALLOW_HIGHDPI
-		};
+		class XRenderer;
 
-		
 		class XSdl
 		{
 
 		};
+
 		class XWindow
 		{
 		public:
 			XWindow(const std::string & title, int x, int y, int w, int h, WindowFlag flags);
 			~XWindow();
 		private:
+			friend class XRenderer;
 			SDL_Window * window_;
 		};
 
-
-		extern inline Uint32 GetWindowFlag(WindowFlag flag);
+		class XRenderer
+		{
+		public:
+			XRenderer(const XWindow & win,RendererFlag flag = RendererFlag::SDL_RENDERER_ACCELERATED,int index = -1);
+			~XRenderer();
+		private:
+			SDL_Renderer * renderer_;
+		};
 	}
 }
 

@@ -41,6 +41,13 @@ namespace cbl{
 			:exception(msg){}
 	};
 
-
+	class renderer_create_failed_exception :public std::exception
+	{
+	public:
+		renderer_create_failed_exception(const std::string & msg)
+			:exception(msg.c_str()){}
+		renderer_create_failed_exception(const char * msg)
+			:exception(msg){}
+	};
 }
 #endif
