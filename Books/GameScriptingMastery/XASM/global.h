@@ -20,6 +20,7 @@ namespace xasm
 	const int VERSION_MINOR = 0;
 
 	const int MAX_INSTR_LOOKUP_COUNT = 256;
+	const int DEFAULT_STACKSIZE = 512;
 
 	const std::string ERROR_MSG_LOCAL_SETSTACKSIZE =
 		"SetStackSize can only appear in the global scope";

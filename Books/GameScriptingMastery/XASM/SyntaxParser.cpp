@@ -137,6 +137,10 @@ namespace xasm
 					break;
 			}
 		}
+
+		if (this->header_.StackSize == 0){
+			this->header_.StackSize = DEFAULT_STACKSIZE;
+		}
 	}
 
 	void SyntaxParser::BuildXSE()
@@ -146,15 +150,116 @@ namespace xasm
 
 		std::ofstream file;
 		
-		file.open(outputname.c_str(), std::ios::binary | std::ios::out | std::ios::trunc | std::ios::app);
+		file.open(outputname.c_str(), std::ios::binary | std::ios::out);
 		if (file.fail()){
 			throw file_open_failed_exception{ outputname + "open failed." };
 		}
 
+		// ID String:"XSE0"(4 bytes)
 		file.write(XSE_ID_STRING.c_str(), strlen(XSE_ID_STRING.c_str()));
-		file.write((char*)VERSION_MAJOR, sizeof(VERSION_MAJOR));
-		file.write((char*)VERSION_MINOR, sizeof(VERSION_MINOR));
+		// Version number(each one byte,total 2 bytes)
+		char major = static_cast<char>(VERSION_MAJOR);
+		char minor = static_cast<char>(VERSION_MINOR);
+		file.write((char*)&major, sizeof(major));
+		file.write((char*)&minor, sizeof(minor));
+		// Stack size(4 bytes)
+		file.write((char*)&this->header_.StackSize, sizeof(this->header_.StackSize));
+		// Global data size(4 bytes)
+		file.write((char*)&this->header_.GlobalDataSize, sizeof(this->header_.GlobalDataSize));
+		// _Main() mark(1 bytes)
+		char isMainPresent = 0;
+		if (this->header_.IsMainFuncPresent){
+			isMainPresent = 1;
+		}
+		file.write((char*)&isMainPresent, sizeof(isMainPresent));
+		// _Main() index(4 bytes)
+		file.write((char*)&this->header_.MainFuncIndex, sizeof(this->header_.MainFuncIndex));
 
+		/* Write instruction streams */
+		// numbers of instructions(4 bytes)
+		file.write((char*)&this->instr_stream_size, sizeof(this->instr_stream_size));
+
+		for (int i = 0; i < instr_stream_size; ++i){
+			// op code(2 bytes)
+			short sOpCode = static_cast<short>(this->table_.InstructionTable[i].OpCode);
+			file.write((char*)&sOpCode, sizeof(sOpCode));
+			// op count(1 byte)
+			char cOpCount = static_cast<char>(this->table_.InstructionTable[i].OpCount);
+			file.write((char*)&cOpCount, sizeof(cOpCount));
+			// write op list
+			for (int j = 0; j < cOpCount; ++j){
+				Operation op = this->table_.InstructionTable[i].OpList[j];
+
+				// operation type(1 byte)
+				char cOpType = op.Type;
+				file.write((char*)&cOpType, sizeof(cOpType));
+				// operation code
+				switch (op.Type){
+				case OpType::OP_TYPE_INT:
+					file.write((char*)&op.IntLiteral, sizeof(op.IntLiteral));
+					break;
+				case OpType::OP_TYPE_FLOAT:
+					file.write((char*)&op.FloatLiteral, sizeof(op.FloatLiteral));
+					break;
+				case OpType::OP_TYPE_STRING_INDEX:
+					file.write((char*)&op.StringTableIndex, sizeof(op.StringTableIndex));
+					break;
+				case OpType::OP_TYPE_INSTR_INDEX:
+					file.write((char*)&op.InstrIndex, sizeof(op.InstrIndex));
+					break;
+				case OpType::OP_TYPE_ABS_STACK_INDEX:
+					file.write((char*)&op.StackIndex, sizeof(op.StackIndex));
+					break;
+				case OpType::OP_TYPE_REL_STACK_INDEX:
+					file.write((char*)&op.StackIndex, sizeof(op.StackIndex));
+					file.write((char*)&op.OffsetIndex, sizeof(op.OffsetIndex));
+					break;
+				case OpType::OP_TYPE_FUNC_INDEX:
+					file.write((char*)&op.FuncIndex, sizeof(op.FuncIndex));
+					break;
+				case OpType::OP_TYPE_HOST_API_CALL_INDEX:
+					file.write((char*)&op.HostAPICallIndex, sizeof(op.HostAPICallIndex));
+					break;
+				case OpType::OP_TYPE_REG:
+					file.write((char*)&op.Reg, sizeof(op.Reg));
+					break;
+				default:
+					assert("unknow operation type!");
+					break;
+				}
+			}
+		}//end write operation list
+
+		// string table
+		// numbers of strings
+		int iStrSize = this->table_.StringTable.size();
+		file.write((char*)&iStrSize, sizeof(iStrSize));
+		for (int i = 0; i < iStrSize; ++i){
+			char * pStr = const_cast<char*>(this->table_.StringTable[i].c_str());
+			int iStrLengh = this->table_.StringTable[i].size();
+			file.write((char*)&iStrLengh, sizeof(iStrLengh));
+			file.write(pStr, strlen(pStr));
+		}
+
+		//function table
+		int iFuncSize = this->table_.FuncTable.size();
+		file.write((char*)&iFuncSize, sizeof(iFuncSize));
+		for (int i = 0; i < iFuncSize; ++i){
+			// Entry Point(4 bytes)
+			int iEntryPoint = this->table_.FuncTable[i].EntryPoint;
+			file.write((char*)&iEntryPoint, sizeof(iEntryPoint));
+
+			// Number of parameter
+			char cParamCount = static_cast<char>(this->table_.FuncTable[i].ParamCount);
+			file.write((char*)&cParamCount, sizeof(cParamCount));
+
+			// Local Data Size(4 bytes)
+			int iLocalDataSize = this->table_.FuncTable[i].LocalDataSize;
+			file.write((char*)&iLocalDataSize, sizeof(iLocalDataSize));
+		}
+
+		// TODO:WRITE HOST API CALL TABLE INFORMATION
+		// ...
 	}
 
 	void SyntaxParser::HandleSetStackSize()

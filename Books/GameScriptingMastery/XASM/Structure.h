@@ -136,8 +136,7 @@ namespace xasm
 	/* assemble instruction stream  */
 	// operation
 	struct Operation
-	{
-		int Type;
+	{	
 		union
 		{
 			int IntLiteral;
@@ -150,6 +149,7 @@ namespace xasm
 			int Reg;
 		};
 		int OffsetIndex;
+		char Type;
 	};
 
 	// instruction
