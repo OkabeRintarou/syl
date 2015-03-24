@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scripted Intro", "Scripted 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XASM", "XASM\XASM.vcxproj", "{51C1EBF4-79A7-4205-BF38-8DBBF524FA23}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XVM", "XVM\XVM.vcxproj", "{8BB7692E-D011-4912-8711-BD7639A443AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{51C1EBF4-79A7-4205-BF38-8DBBF524FA23}.Debug|Win32.Build.0 = Debug|Win32
 		{51C1EBF4-79A7-4205-BF38-8DBBF524FA23}.Release|Win32.ActiveCfg = Release|Win32
 		{51C1EBF4-79A7-4205-BF38-8DBBF524FA23}.Release|Win32.Build.0 = Release|Win32
+		{8BB7692E-D011-4912-8711-BD7639A443AF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8BB7692E-D011-4912-8711-BD7639A443AF}.Debug|Win32.Build.0 = Debug|Win32
+		{8BB7692E-D011-4912-8711-BD7639A443AF}.Release|Win32.ActiveCfg = Release|Win32
+		{8BB7692E-D011-4912-8711-BD7639A443AF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
