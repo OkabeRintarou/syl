@@ -46,7 +46,8 @@ enum TokenType
 	NIL         = 296, /*      nil              */
 	FUNCTION    = 297, /*      function         */
 	VAR         = 298, /*      var              */
-	TYPE        = 299  /*      type             */
+	TYPE        = 299, /*      type             */
+	ENDOFFILE   = 300  /*    end of file        */
 };
 
 typedef union
