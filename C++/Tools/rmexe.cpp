@@ -75,7 +75,10 @@ int main(int argc,char * argv[])
 	}
 	for(auto & filename:files_to_remove){
 		printf("rm %s ",filename.c_str());
-		printf(remove(filename.c_str()) == 0 ? "SUCCEEDED\n":"FAILED\n");
+		std::string command = std::string("mv ") + filename + " /tmp"; 
+		int rc = system(command.c_str());
+		printf("%s",command.c_str());
+		printf(rc == -1 ? "\tFAILED\n":"\tSUCCEEDED\n");
 	}
 	return 0;
 }
