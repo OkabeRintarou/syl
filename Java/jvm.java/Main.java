@@ -1,3 +1,4 @@
+import classpath.ClassPath;
 import org.apache.commons.cli.*;
 
 public class Main {
@@ -8,9 +9,7 @@ public class Main {
         options.addOption(helpFlag);
         Option versionFlag = new Option("version",false,"print version and exit");
         options.addOption(versionFlag);
-        Option cp = new Option("classpath",true,"classpath");
-        options.addOption(cp);
-        cp = new Option("cp",true,"classpath");
+        Option cp = new Option("cp",true,"classpath");
         options.addOption(cp);
         Option XjreOption = new Option("Xjre",true,"path ro jre");
         options.addOption(XjreOption);
@@ -39,5 +38,21 @@ public class Main {
 
     private static void startJVM(CommandLine cmd) {
         System.out.println("Start JVM");
+
+        ClassPath cp = new ClassPath(cmd.getOptionValue("jre"),cmd.getOptionValue("cp"));
+        String[] args = cmd.getArgs();
+        if(args.length == 0) {
+            System.out.println("Usage: java [-options] class [args...]");
+            return;
+        }
+
+        String className = args[0].replace('.','/');
+        byte[] content = cp.readClass(className);
+        if(content != null) {
+            for(byte b : content) {
+                System.out.printf("%d ",b);
+            }
+            System.out.println();
+        }
     }
 }    
