@@ -1,18 +1,22 @@
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
 #include <stack>
+#include <string>
 #include <unordered_map>
+#include <vector>
+
+#include "interpreter.h"
+#include "timer.h"
 
 using namespace std;
 
 const int kDefaultSize = 40960;
 
-unordered_map<unsigned long,unsigned long> brackets_cache(const char *code) {
-  unordered_map<unsigned long,unsigned long > cache;
+static unordered_map<unsigned long, unsigned long>
+brackets_cache(const char *code) {
+  unordered_map<unsigned long, unsigned long> cache;
   stack<unsigned long> stk;
   const char *pc = code;
   char ch;
@@ -28,14 +32,14 @@ unordered_map<unsigned long,unsigned long> brackets_cache(const char *code) {
   }
   return cache;
 }
-
-void run(const char *code,unordered_map<unsigned long,unsigned long> &cache) {
+static void run(const char *code,
+                unordered_map<unsigned long, unsigned long> &cache) {
   vector<char> data(kDefaultSize);
   const char *pc = code;
   char *dc = &data[0];
   char ch;
 
-  fill(data.begin(),data.end(),0);
+  fill(data.begin(), data.end(), 0);
 
   while ((ch = *pc)) {
     switch (ch) {
@@ -74,31 +78,13 @@ void run(const char *code,unordered_map<unsigned long,unsigned long> &cache) {
   }
 }
 
-int main(int argc, char *argv[]) {
-  if (argc!=2) {
-    fprintf(stderr, "Usage: %s <input>\n", argv[0]);
-    exit(1);
-  }
-  FILE *fp;
-  if ((fp = fopen(argv[1], "r"))==NULL) {
-    fprintf(stderr, "Cannot open file %s\n", argv[1]);
-    exit(1);
-  }
+namespace Interpreter {
 
-  long fsz = 0;
-  fseek(fp, 0, SEEK_END);
-  fsz = ftell(fp);
-  rewind(fp);
-  char * code = new char[fsz + 1];
-  if (fread(code,sizeof(char),fsz,fp) != fsz) {
-    fprintf(stderr,"fread error\n");
-    exit(1);
-  }
-  code[fsz] = 0;
-
-  unordered_map<unsigned long,unsigned long> cache = brackets_cache(code);
-  run(code,cache);
-
-  delete[] code;
-  return 0;
+void run(const char *code) {
+  unordered_map<unsigned long, unsigned long> cache = brackets_cache(code);
+  Timer timer;
+  timer.reset();
+  ::run(code, cache);
+  printf("interpreter cost %.2lfs\n", timer.elapsed());
+}
 }
