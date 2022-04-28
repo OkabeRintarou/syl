@@ -8,7 +8,7 @@
 static constexpr int ITER_COUNT = 5;
 
 int main() {
-    omp_set_nested(1);
+
     double elapsed1, elapsed2, elapsed3;
     const int size = 32 << 20;
     Timer timer;

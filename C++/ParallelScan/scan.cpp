@@ -48,30 +48,24 @@ void parallel_cpu_scan_version_1(float *output, const float *input, const int le
 }
 
 void parallel_cpu_scan_version_2(float *output, const float *input, const int len) {
-    if (len <= (1 << 20)) {
-        return serial_scan(output, input, len);
-    }
 
-    int mid = len / 2;
+    const int d = len / 2;
+
     #pragma omp parallel num_threads(2)
     {
         int thread_id = omp_get_thread_num();
-        const float *in_begin = input + thread_id * mid;
-        float *out_begin = output + thread_id * mid;
-
-        int n = mid;
-        const float *in_end = in_begin + mid;
-        if (in_end > input + len) {
-            in_end = input + len;
-            n = in_end - in_begin;
+        int start = thread_id * d;
+        int end = start + d;
+        if (end > len) {
+            end = len;
         }
-        parallel_cpu_scan_version_2(out_begin, in_begin, n);
+        serial_scan(output + start, input + start, end - start);
     }
 
-    const float base = output[mid - 1] + input[mid - 1];
+    const float base = output[d - 1] + input[d - 1];
 
     #pragma omp parallel for schedule(static)
-    for (int i = mid; i < len; i++) {
+    for (int i = d; i < len; i++) {
         output[i] += base;
     }
 }
