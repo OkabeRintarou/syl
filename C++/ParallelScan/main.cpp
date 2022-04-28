@@ -12,16 +12,16 @@ int main() {
     double elapsed1, elapsed2, elapsed3;
     const int size = 32 << 20;
     Timer timer;
-    float *input, *output1, *output2, *output3;
+    int *input, *output1, *output2, *output3;
 
-    output1 = new float[size];
-    output2 = new float[size];
-    output3 = new float[size];
+    output1 = new int[size];
+    output2 = new int[size];
+    output3 = new int[size];
     elapsed1 = elapsed2 = elapsed3 = 0.0;
 
     for (int i = 0; i < ITER_COUNT; i++) {
 
-        input = gen(size);
+        input = gen_int(size);
         timer.reset();
         serial_scan(output1, input, size);
         elapsed1 += timer.elapsed_milliseconds();
@@ -36,12 +36,12 @@ int main() {
 
         // verify correctness
         for (int j = 0; j < size; j++) {
-            if (fabsf(output1[j] - output2[j]) > 1000.0f) {
-                fprintf(stderr, "parallel cpu scan version 1: [%d] expect: %f, actual: %f\n", j, output1[j], output2[j]);
+            if (output1[j] != output2[j]) {
+                fprintf(stderr, "parallel cpu scan version 1: [%d] expect: %d, actual: %d\n", j, output1[j], output2[j]);
                 break;
             }
-            if (fabsf(output1[j] - output3[j]) > 1000.0f) {
-                fprintf(stderr, "parallel cpu scan version 2: [%d] expect: %f, actual: %f\n", j, output1[j], output3[j]);
+            if (output1[j] != output3[j]) {
+                fprintf(stderr, "parallel cpu scan version 2: [%d] expect: %d, actual: %d\n", j, output1[j], output3[j]);
                 break;
             }
         }

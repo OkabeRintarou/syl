@@ -2,4 +2,5 @@
 
 #include <random>
 
-float *gen(int size);
+float *gen_float(int size);
+int *gen_int(int size);
