@@ -48,29 +48,30 @@ void parallel_cpu_scan_version_1(float *output, const float *input, const int le
 }
 
 void parallel_cpu_scan_version_2(float *output, const float *input, const int len) {
-    if (len <= 32) {
-        serial_scan(output, input, len);
-        return;
+    if (len <= (1 << 20)) {
+        return serial_scan(output, input, len);
     }
 
-    const int mid = len / 2;
+    int mid = len / 2;
+    #pragma omp parallel num_threads(2)
     {
-        std::thread t1(serial_scan, output, input, mid);
-        std::thread t2(serial_scan, output + mid, input + mid, len - mid);
-        t1.join();
-        t2.join();
+        int thread_id = omp_get_thread_num();
+        const float *in_begin = input + thread_id * mid;
+        float *out_begin = output + thread_id * mid;
+
+        int n = mid;
+        const float *in_end = in_begin + mid;
+        if (in_end > input + len) {
+            in_end = input + len;
+            n = in_end - in_begin;
+        }
+        parallel_cpu_scan_version_2(out_begin, in_begin, n);
     }
-    {
-        float base = output[mid - 1] + input[mid - 1];
-        const auto f = [](float *vec, int len, float b) {
-            for (int i = 0; i < len; i++) {
-                vec[i] += b;
-            }
-        };
-        const int mid_mid = (len - mid) / 2;
-        std::thread t1(f, output + mid, mid_mid, base);
-        std::thread t2(f, output + mid + mid_mid, len - mid - mid_mid, base);
-        t1.join();
-        t2.join();
+
+    const float base = output[mid - 1] + input[mid - 1];
+
+    #pragma omp parallel for schedule(static)
+    for (int i = mid; i < len; i++) {
+        output[i] += base;
     }
 }

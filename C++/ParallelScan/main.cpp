@@ -3,12 +3,14 @@
 #include "util.h"
 #include <iostream>
 #include <memory>
+#include <omp.h>
 
 static constexpr int ITER_COUNT = 5;
 
 int main() {
+    omp_set_nested(1);
     double elapsed1, elapsed2, elapsed3;
-    const int size = (8 << 20);
+    const int size = 32 << 20;
     Timer timer;
     float *input, *output1, *output2, *output3;
 
@@ -18,8 +20,8 @@ int main() {
     elapsed1 = elapsed2 = elapsed3 = 0.0;
 
     for (int i = 0; i < ITER_COUNT; i++) {
-        input = gen(size);
 
+        input = gen(size);
         timer.reset();
         serial_scan(output1, input, size);
         elapsed1 += timer.elapsed_milliseconds();
@@ -39,8 +41,7 @@ int main() {
                 break;
             }
             if (fabsf(output1[j] - output3[j]) > 1000.0f) {
-                fprintf(stderr, "parallel cpu scan version 1: [%d] expect: %f, actual: %f\n", j, output1[j], output2[j]);
-                fprintf(stderr, "parallel cpu scan version 2: [%d] expect: %f, actual: %f\n", j, output1[j], output2[j]);
+                fprintf(stderr, "parallel cpu scan version 2: [%d] expect: %f, actual: %f\n", j, output1[j], output3[j]);
                 break;
             }
         }
