@@ -1,4 +1,6 @@
+#include "model.h"
 #include "sdl_helper.h"
+#include "vec.h"
 #include <iostream>
 #include <vector>
 
@@ -70,6 +72,16 @@ void bresenham_render_test(Context *ctx) {
 }
 
 int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "usage: " << argv[0] << " <obj-file>" << std::endl;
+        return -1;
+    }
+    Model model(argv[1]);
+    if (model.nverts() == 0) {
+        std::cerr << "fail to load model " << argv[1] << std::endl;
+        return -1;
+    }
+
     auto context = init(1920, 1080, "tiny-render");
     if (!context) {
         std::cerr << "Fail to init sdl context\n";
