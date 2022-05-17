@@ -1,6 +1,5 @@
 #include "model.h"
 #include "sdl_helper.h"
-#include "vec.h"
 #include <iostream>
 #include <vector>
 
@@ -47,7 +46,7 @@ void line(int x1, int y1, int x2, int y2, SDL_Renderer *render) {
     }
 }
 
-void bresenham_render_test(Context *ctx) {
+void bresenham_render_test(Context *ctx, void *) {
     auto render = ctx->render;
     const int width = ctx->width;
     const int height = ctx->height;
@@ -71,6 +70,27 @@ void bresenham_render_test(Context *ctx) {
     }
 }
 
+void model_render(Context *ctx, void *d) {
+    Model &model = *((Model *) d);
+    const auto width = float(ctx->width);
+    const auto height = float(ctx->height);
+
+    SDL_SetRenderDrawColor(ctx->render, 0xff, 0x00, 0x00, 0xff);
+
+    for (std::size_t i = 0, ni = model.nfaces(); i < ni; i++) {
+        auto &face = model.face(i);
+        for (std::size_t j = 0; j < 3; j++) {
+            const Vec3f &v0 = model.vert(face[j]);
+            const Vec3f &v1 = model.vert(face[(j + 1) % 3]);
+            int x0 = static_cast<int>((v0.x + 1.0f) * width / 2.0f);
+            int y0 = static_cast<int>((v0.y + 1.0f) * height / 2.0f);
+            int x1 = static_cast<int>((v1.x + 1.0f) * width / 2.0f);
+            int y1 = static_cast<int>((v1.y + 1.0f) * height / 2.0f);
+            line(x0, y0, x1, y1, ctx->render);
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         std::cerr << "usage: " << argv[0] << " <obj-file>" << std::endl;
@@ -88,8 +108,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    context->set_render_func(bresenham_render_test);
-    context->run();
+    context->set_render_func(model_render);
+    context->run(&model);
 
     return 0;
 }

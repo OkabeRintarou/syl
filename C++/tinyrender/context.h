@@ -3,7 +3,7 @@
 
 class Context;
 
-using RenderFunc = void (*)(Context *);
+using RenderFunc = void (*)(Context *, void *);
 
 class Context {
 public:
@@ -16,7 +16,7 @@ public:
     Context &operator=(const Context &) = delete;
 
     void set_render_func(RenderFunc func) { render_func_ = func; }
-    void run();
+    void run(void * = nullptr);
 
     SDL_Window *window = nullptr;
     SDL_Renderer *render = nullptr;

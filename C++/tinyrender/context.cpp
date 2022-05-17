@@ -13,7 +13,7 @@ Context::~Context() {
     }
 }
 
-void Context::run() {
+void Context::run(void *d) {
 
     assert(window != nullptr && render != nullptr);
 
@@ -48,7 +48,7 @@ void Context::run() {
         SDL_RenderClear(render);
 
         if (render_func_) {
-            render_func_(this);
+            render_func_(this, d);
         }
 
         SDL_RenderPresent(render);
