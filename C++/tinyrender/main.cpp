@@ -47,28 +47,21 @@ void line(int x1, int y1, int x2, int y2, Context *ctx) {
     }
 }
 
-void bresenham_render_test(Context *ctx, void *) {
-    auto render = ctx->render;
-    const int width = ctx->width;
-    const int height = ctx->height;
-    const int origin_x = width / 2;
-    const int origin_y = height / 2;
-    float ratio[] = {0.0f, 0.1f, 0.25f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.75f, 0.8f, 0.9f, 1.0f};
-    std::vector<int> end_points;
-    end_points.reserve(64);
+static void triangle(Vec2i t0, Vec2i t1, Vec2i t2, SDL_Color color, Context *ctx) {
+    SDL_SetRenderDrawColor(ctx->render, color.r, color.g, color.b, color.a);
+    line(t0.x, t0.y, t1.x, t1.y, ctx);
+    line(t1.x, t1.y, t2.x, t2.y, ctx);
+    line(t2.x, t2.y, t0.x, t0.y, ctx);
+}
 
-    for (auto i = std::begin(ratio), ei = std::end(ratio); i < ei; ++i) {
-        for (auto j = std::begin(ratio), ej = std::end(ratio); j < ej; ++j) {
-            end_points.emplace_back(static_cast<int>(*i * (float) width));
-            end_points.emplace_back(static_cast<int>(*j * (float) height));
-        }
-    }
+void triangle_test(Context *ctx, void *) {
+    Vec2i t0[3] = {{10, 70}, {50, 160}, {70, 80}};
+    Vec2i t1[3] = {{180, 50}, {150, 1}, {70, 180}};
+    Vec2i t2[3] = {{180, 150}, {120, 160}, {130, 180}};
 
-    SDL_SetRenderDrawColor(render, 0xff, 0x00, 0x00, 0xff);
-    std::size_t points_cnt = end_points.size();
-    for (std::size_t i = 0; i < points_cnt; i += 2) {
-        line(origin_x, origin_y, end_points[i], end_points[i + 1], ctx);
-    }
+    triangle(t0[0], t0[1], t0[2], {255, 0, 0, 255}, ctx);
+    triangle(t1[0], t1[1], t1[2], {255, 255, 255, 255}, ctx);
+    triangle(t2[0], t2[1], t2[2], {0, 255, 0, 255}, ctx);
 }
 
 void model_render(Context *ctx, void *d) {
@@ -111,7 +104,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    context->set_render_func(model_render);
+    context->set_render_func(triangle_test);
     context->run(&model);
 
     return 0;
