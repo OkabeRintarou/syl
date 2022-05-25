@@ -20,8 +20,9 @@ void Context::run(void *d) {
     SDL_Event event;
     bool quit = false;
 
-    unsigned cur_time;
+    unsigned cur_time, last_time = 0, delta_time;
     unsigned next_frame_time = SDL_GetTicks();
+    float fps;
 
     for (;;) {
         do {
@@ -44,6 +45,8 @@ void Context::run(void *d) {
             next_frame_time += 1000 / 60;
         }
 
+
+
         SDL_SetRenderDrawColor(render, 0xff, 0xff, 0xff, 0xff);
         SDL_RenderClear(render);
 
@@ -53,6 +56,14 @@ void Context::run(void *d) {
 
         SDL_RenderCopy(render, texture_, nullptr, nullptr);
         SDL_RenderPresent(render);
+
+        cur_time = SDL_GetTicks();
+        delta_time = cur_time - last_time;
+        if (delta_time == 0) ++delta_time;
+        fps = 1000.0f / static_cast<float>(delta_time);
+        std::cout << "fps: " << fps << std::endl;
+
+        last_time = cur_time;
     }
 }
 
