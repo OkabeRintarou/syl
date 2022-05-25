@@ -51,7 +51,9 @@ void Context::run(void *d) {
         SDL_RenderClear(render);
 
         if (render_func_) {
+            begin_draw();
             render_func_(this, d);
+            end_draw();
         }
 
         SDL_RenderCopy(render, texture_, nullptr, nullptr);
