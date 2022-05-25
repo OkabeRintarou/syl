@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-void line(int x1, int y1, int x2, int y2, SDL_Renderer *render) {
+void line(int x1, int y1, int x2, int y2, Context *ctx) {
 
     if (abs(y1 - y2) < abs(x1 - x2)) {
         if (x1 > x2) {
@@ -25,7 +25,7 @@ void line(int x1, int y1, int x2, int y2, SDL_Renderer *render) {
 
     if (dy < dx) {
         for (x = x1; x <= x2; x++) {
-            SDL_RenderDrawPoint(render, x, y);
+            ctx->draw_pixel2(x, y);
 
             eps += dy;
             if ((eps << 1) >= dx) {
@@ -35,7 +35,8 @@ void line(int x1, int y1, int x2, int y2, SDL_Renderer *render) {
         }
     } else {
         for (y = y1; y <= y2; y++) {
-            SDL_RenderDrawPoint(render, x, y);
+
+            ctx->draw_pixel2(x, y);
 
             eps += dx;
             if ((eps << 1) >= dy) {
@@ -66,7 +67,7 @@ void bresenham_render_test(Context *ctx, void *) {
     SDL_SetRenderDrawColor(render, 0xff, 0x00, 0x00, 0xff);
     std::size_t points_cnt = end_points.size();
     for (std::size_t i = 0; i < points_cnt; i += 2) {
-        line(origin_x, origin_y, end_points[i], end_points[i + 1], render);
+        line(origin_x, origin_y, end_points[i], end_points[i + 1], ctx);
     }
 }
 
@@ -86,7 +87,7 @@ void model_render(Context *ctx, void *d) {
             int y0 = static_cast<int>((v0.y + 1.0f) * height / 2.0f);
             int x1 = static_cast<int>((v1.x + 1.0f) * width / 2.0f);
             int y1 = static_cast<int>((v1.y + 1.0f) * height / 2.0f);
-            line(x0, y0, x1, y1, ctx->render);
+            line(x0, y0, x1, y1, ctx);
         }
     }
 }

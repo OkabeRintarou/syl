@@ -54,3 +54,11 @@ void Context::run(void *d) {
         SDL_RenderPresent(render);
     }
 }
+
+void Context::draw_pixel(int x, int y) {
+    SDL_RenderDrawPoint(render, x, y);
+}
+
+void Context::draw_pixel2(int x, int y) {
+    SDL_RenderDrawPoint(render, x, -y + height);
+}
