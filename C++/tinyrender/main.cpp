@@ -47,11 +47,36 @@ void line(int x1, int y1, int x2, int y2, Context *ctx) {
     }
 }
 
+static inline int orient(Vec2i a, Vec2i b, Vec2i c) {
+    Vec2i ac = c - a;
+    Vec2i bc = c - b;
+    int cross_produce = ac.x * bc.y - ac.y * bc.x;
+    return cross_produce >= 0 ? 1 : -1;
+}
+
+static bool in_triangle(int x, int y, Vec2i t0, Vec2i t1, Vec2i t2) {
+    int r1 = orient(t0, t1, {x, y});
+    int r2 = orient(t1, t2, {x, y});
+    int r3 = orient(t2, t0, {x, y});
+    int sum = r1 + r2 + r3;
+    return sum == 3 || sum == -3;
+}
+
 static void triangle(Vec2i t0, Vec2i t1, Vec2i t2, SDL_Color color, Context *ctx) {
     SDL_SetRenderDrawColor(ctx->render, color.r, color.g, color.b, color.a);
-    line(t0.x, t0.y, t1.x, t1.y, ctx);
-    line(t1.x, t1.y, t2.x, t2.y, ctx);
-    line(t2.x, t2.y, t0.x, t0.y, ctx);
+
+    int x_min = std::min(t0.x, std::min(t1.x, t2.x));
+    int x_max = std::max(t0.x, std::max(t1.x, t2.x));
+    int y_min = std::min(t0.y, std::min(t1.y, t2.y));
+    int y_max = std::max(t0.y, std::max(t1.y, t2.y));
+
+    for (int x = x_min; x <= x_max; ++x) {
+        for (int y = y_min; y <= y_max; ++y) {
+            if (in_triangle(x, y, t0, t1, t2)) {
+                ctx->draw_pixel2(x, y);
+            }
+        }
+    }
 }
 
 void triangle_test(Context *ctx, void *) {
