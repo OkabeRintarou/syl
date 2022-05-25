@@ -78,6 +78,7 @@ void model_render(Context *ctx, void *d) {
 
     SDL_SetRenderDrawColor(ctx->render, 0xff, 0x00, 0x00, 0xff);
 
+    ctx->begin_draw();
     for (std::size_t i = 0, ni = model.nfaces(); i < ni; i++) {
         auto &face = model.face(i);
         for (std::size_t j = 0; j < 3; j++) {
@@ -90,6 +91,7 @@ void model_render(Context *ctx, void *d) {
             line(x0, y0, x1, y1, ctx);
         }
     }
+    ctx->end_draw();
 }
 
 int main(int argc, char *argv[]) {

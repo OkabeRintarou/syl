@@ -51,14 +51,33 @@ void Context::run(void *d) {
             render_func_(this, d);
         }
 
+        SDL_RenderCopy(render, texture_, nullptr, nullptr);
         SDL_RenderPresent(render);
     }
 }
 
 void Context::draw_pixel(int x, int y) {
-    SDL_RenderDrawPoint(render, x, y);
+    assert(pixel_ != nullptr);
+    uint8_t r, g, b, a;
+    SDL_GetRenderDrawColor(render, &r, &g, &b, &a);
+    auto start = (uint32_t*)(static_cast<uint8_t*>(pixel_) + y * pitch_) + x;
+    *start = (a << 24) | (r << 16) | (g << 8) | b;
 }
 
 void Context::draw_pixel2(int x, int y) {
-    SDL_RenderDrawPoint(render, x, -y + height);
+    assert(pixel_ != nullptr);
+    uint8_t r, g, b, a;
+    SDL_GetRenderDrawColor(render, &r, &g, &b, &a);
+    auto start = (uint32_t*)(static_cast<uint8_t*>(pixel_) + (height - y) * pitch_) + x;
+    *start = (a << 24) | (r << 16) | (g << 8) | b;
+}
+
+void Context::begin_draw() {
+    SDL_LockTexture(texture_, nullptr, &pixel_, &pitch_);
+}
+
+void Context::end_draw() {
+    SDL_UnlockTexture(texture_);
+    pixel_ = nullptr;
+    pitch_ = 0;
 }
