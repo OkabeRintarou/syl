@@ -1,6 +1,7 @@
 #include "model.h"
 #include "sdl_helper.h"
 #include <iostream>
+#include <random>
 #include <vector>
 
 void line(int x1, int y1, int x2, int y2, Context *ctx) {
@@ -72,6 +73,7 @@ static void triangle(Vec2i t0, Vec2i t1, Vec2i t2, SDL_Color color, Context *ctx
 
     for (int x = x_min; x <= x_max; ++x) {
         for (int y = y_min; y <= y_max; ++y) {
+
             if (in_triangle(x, y, t0, t1, t2)) {
                 ctx->draw_pixel2(x, y);
             }
@@ -94,22 +96,17 @@ void model_render(Context *ctx, void *d) {
     const auto width = float(ctx->width);
     const auto height = float(ctx->height);
 
-    SDL_SetRenderDrawColor(ctx->render, 0xff, 0x00, 0x00, 0xff);
-
-    ctx->begin_draw();
     for (std::size_t i = 0, ni = model.nfaces(); i < ni; i++) {
         auto &face = model.face(i);
+        Vec2i screen_coords[3];
+
         for (std::size_t j = 0; j < 3; j++) {
-            const Vec3f &v0 = model.vert(face[j]);
-            const Vec3f &v1 = model.vert(face[(j + 1) % 3]);
-            int x0 = static_cast<int>((v0.x + 1.0f) * width / 2.0f);
-            int y0 = static_cast<int>((v0.y + 1.0f) * height / 2.0f);
-            int x1 = static_cast<int>((v1.x + 1.0f) * width / 2.0f);
-            int y1 = static_cast<int>((v1.y + 1.0f) * height / 2.0f);
-            line(x0, y0, x1, y1, ctx);
+            Vec3f world_coords = model.vert(face[j]);
+            screen_coords[j] = Vec2i(static_cast<int>((world_coords.x + 1.f) * (float) width / 2.f),
+                                     static_cast<int>((world_coords.y + 1.f) * (float) height / 2.f));
         }
+        triangle(screen_coords[0], screen_coords[1], screen_coords[2], {(uint8_t) (rand() % 256), (uint8_t) (rand() % 256), (uint8_t) (rand() % 256), 255}, ctx);
     }
-    ctx->end_draw();
 }
 
 int main(int argc, char *argv[]) {
@@ -129,7 +126,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    context->set_render_func(triangle_test);
+    context->set_render_func(model_render);
     context->run(&model);
 
     return 0;
